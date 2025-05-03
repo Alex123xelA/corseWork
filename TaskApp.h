@@ -15,6 +15,7 @@
 #include <QRandomGenerator>
 #include <QHBoxLayout>
 #include <iostream>
+#include <QLabel>
 class TaskApp : public QMainWindow
 {
     Q_OBJECT
@@ -51,19 +52,16 @@ class viewWindow : public QWidget
 {
     Q_OBJECT
 public:
-    viewWindow(QWidget* parent = nullptr);
-    ~viewWindow();
-    //void createViwerWindow();
-    void createEditorWindow();
+    viewWindow();
 private slots:
+    void add();
+    void remove();
+    void edit();
 private:
-    void onAddButtonClicked();
-    void onDeleteButtonClicked();
-    void onSaveButtonClicked();
-    QString generateUniqueID();
-    void loadTasksToTable();
-    QTableWidget* table;
-    
+    void updateStatusLabel(int value);
+    QLabel* statusLabel;
+    QSlider* slider;
+    QTableWidget table();
 };
 
 class TextFile {

@@ -63,7 +63,7 @@ QString TextFile::createNewId()
 
 void TextFile::update()
 {
-    QFile file("TextFile.txt");
+    QFile file("Tasks.txt");
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         std::cout << "Error" << std::endl;
@@ -79,7 +79,7 @@ void TextFile::update()
 
 void TextFile::save()
 {
-    QFile file("TextFile.txt");
+    QFile file("Tasks.txt");
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         std::cout << "Error" << std::endl;
