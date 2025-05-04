@@ -9,7 +9,7 @@ viewWindow::viewWindow()
     QHBoxLayout* mainHorizontalLayout = new QHBoxLayout();
 
     //Создаём файл с заадчами
-    TextFile* info = new TextFile;
+    info = new TextFile;
 
     // 1. Левая часть: вертикальные кнопки
     QVBoxLayout* buttonLayout = new QVBoxLayout();
@@ -24,7 +24,7 @@ viewWindow::viewWindow()
     buttonLayout->addStretch();
 
     // 2. Центральная часть: таблица
-    QTableWidget* table = new QTableWidget(this);
+    table = new QTableWidget(this);
     table->setRowCount(info->size);
     table->setColumnCount(2);
     table->setHorizontalHeaderLabels({ "Название задачи", "Текст задачи" });
@@ -60,7 +60,9 @@ viewWindow::viewWindow()
 
     // Подключаем сигнал слайдера к обновлению надписи
     connect(slider, &QSlider::valueChanged, this, &viewWindow::updateStatusLabel);
-
+    connect(button1, &QPushButton::clicked, this, &viewWindow::add);
+    connect(button2, &QPushButton::clicked, this, &viewWindow::remove);
+    connect(button3, &QPushButton::clicked, this, &viewWindow::edit);
     setLayout(mainVerticalLayout);
 }
 
@@ -71,7 +73,7 @@ void viewWindow::updateStatusLabel(int value) {
 
 void viewWindow::add()
 {
-
+    
 }
 void viewWindow::remove()
 {
@@ -79,6 +81,13 @@ void viewWindow::remove()
 }
 void viewWindow::edit()
 {
-
+      QVector<QVector<QString>> newInfo;
+    for (int i = 0; i < info->size; ++i) 
+    {
+        
+        QTableWidgetItem* item1 = table->item(i,0);
+        QTableWidgetItem* item2 = table->item(i, 1);
+        info->edit(info->tasks[i][0], item1->text(), item2->text());
+    }
 }
 

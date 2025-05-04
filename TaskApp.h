@@ -48,21 +48,6 @@ private:
     QVector<QVector<QString>> passwordsNames();
 };
 
-class viewWindow : public QWidget
-{
-    Q_OBJECT
-public:
-    viewWindow();
-private slots:
-    void add();
-    void remove();
-    void edit();
-private:
-    void updateStatusLabel(int value);
-    QLabel* statusLabel;
-    QSlider* slider;
-    QTableWidget table();
-};
 
 class TextFile {
 public:
@@ -77,4 +62,21 @@ private:
     QString createNewId();
     void update();
     void save();
+};
+
+class viewWindow : public QWidget
+{
+    Q_OBJECT
+public:
+    viewWindow();
+private slots:
+    void add();
+    void remove();
+    void edit();
+private:
+    void updateStatusLabel(int value);
+    TextFile* info;
+    QLabel* statusLabel;
+    QSlider* slider;
+    QTableWidget* table;
 };

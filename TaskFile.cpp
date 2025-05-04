@@ -84,10 +84,10 @@ void TextFile::save()
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         std::cout << "Error" << std::endl;
     QTextStream save(&file);
-    for (int i = 0; i < this->size + 1; ++i)
+    for (int i = 0; i < this->size; ++i) //for (int i = 0; i < this->size + 1; ++i)
     {
         save << this->tasks[i].join("^^");
-        if (i != this->size)
+        if (i != this->size-1) //if (i != this->size)
             save << "~~~";
     }
 }
