@@ -4,6 +4,7 @@ void TextFile::add(QString newName, QString newText)
 {
     QString newId = createNewId();
     tasks.append(QVector<QString>{newId, newName, newText});
+    size++;
     save();
 }
 

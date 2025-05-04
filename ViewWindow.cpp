@@ -73,7 +73,13 @@ void viewWindow::updateStatusLabel(int value) {
 
 void viewWindow::add()
 {
-    
+    info->add("Название новой задачи","Текст новой задачи");
+    int newRow = table->rowCount(); 
+    table->insertRow(newRow);
+    //qDebug() << info->tasks[2];
+    table->setItem(newRow, 0, new QTableWidgetItem(info->tasks[info->size-1][1]));
+    table->setItem(newRow, 1, new QTableWidgetItem(info->tasks[info->size-1][2]));
+    slider->setRange(1, info->size);  // обычный диапазон
 }
 void viewWindow::remove()
 {
@@ -84,7 +90,6 @@ void viewWindow::edit()
       QVector<QVector<QString>> newInfo;
     for (int i = 0; i < info->size; ++i) 
     {
-        
         QTableWidgetItem* item1 = table->item(i,0);
         QTableWidgetItem* item2 = table->item(i, 1);
         info->edit(info->tasks[i][0], item1->text(), item2->text());
