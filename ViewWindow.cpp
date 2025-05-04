@@ -79,11 +79,16 @@ void viewWindow::add()
     //qDebug() << info->tasks[2];
     table->setItem(newRow, 0, new QTableWidgetItem(info->tasks[info->size-1][1]));
     table->setItem(newRow, 1, new QTableWidgetItem(info->tasks[info->size-1][2]));
-    slider->setRange(1, info->size);  // обычный диапазон
+    slider->setRange(1, info->size);  // обновляем диапозон слайдера
 }
 void viewWindow::remove()
 {
-
+    QString idToRemove;
+    int currentNumber = slider->value(); // значение номера текущей выбранной строки
+    idToRemove = info->tasks[currentNumber - 1][0];
+    info->remove(idToRemove);
+    table->removeRow(currentNumber-1);
+    slider->setRange(1, info->size);  // обновляем диапозон слайдера
 }
 void viewWindow::edit()
 {
