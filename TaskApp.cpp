@@ -57,12 +57,13 @@ void TaskApp::enterButtonClicked() {
 
     int status = fileCheck.isCorrect(strName, strPassword);
     if (status == 0) {
+        //статус управляющего
         viewWindow* window = new viewWindow();  // Создаем окно в куче
-        //window->createEditorWindow();           // Инициализируем окно
         window->show();                        // Показываем окно
     }
     if (status == 1) {
-        // Обработка другого статуса
+        //статус работника
+        
     }
 }
 

@@ -17,10 +17,12 @@ viewWindow::viewWindow()
     QPushButton* button1 = new QPushButton("Добавить", this);
     QPushButton* button2 = new QPushButton("Удалить", this);
     QPushButton* button3 = new QPushButton("Сохранить", this);
+    QPushButton* button4 = new QPushButton("Открыть окно\nредактирования пользователей", this);
 
     buttonLayout->addWidget(button1);
     buttonLayout->addWidget(button2);
     buttonLayout->addWidget(button3);
+    buttonLayout->addWidget(button4);
     buttonLayout->addStretch();
 
     // 2. Центральная часть: таблица

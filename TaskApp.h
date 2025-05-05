@@ -80,3 +80,16 @@ private:
     QSlider* slider;
     QTableWidget* table;
 };
+
+class UsersFile
+{
+public:
+    UsersFile();
+    void add(QString name, QString password, QString status);
+    void remove(QString name);
+    void edit(QString oldName, QString newName, QString password, QString status);
+    int size;
+    QVector<QVector<QString>> users;
+private:
+    void saveChanges();
+};
