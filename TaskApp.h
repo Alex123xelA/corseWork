@@ -103,9 +103,13 @@ public:
     UsersFile users;
     QTableWidget* WorcersTable;
     QTableWidget* ManagersTable;
+    QSlider* WorkersSlider;
+    QSlider* ManagersSlider;
+    QLabel* statusLabel;
+    QSlider* topSlider;
 private slots:
     void add();
     void remote();
     void edit();
-
+    void updateStatusLabel();
 };
