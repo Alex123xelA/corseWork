@@ -73,6 +73,7 @@ private slots:
     void add();
     void remove();
     void edit();
+    void showUsersEditor();
 private:
     void updateStatusLabel(int value);
     TextFile* info;
@@ -92,4 +93,19 @@ public:
     QVector<QVector<QString>> users;
 private:
     void saveChanges();
+};
+
+class UsersEditor : public QWidget
+{
+    Q_OBJECT
+public:
+    UsersEditor();
+    UsersFile users;
+    QTableWidget* WorcersTable;
+    QTableWidget* ManagersTable;
+private slots:
+    void add();
+    void remote();
+    void edit();
+
 };

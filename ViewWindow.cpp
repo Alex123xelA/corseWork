@@ -65,6 +65,7 @@ viewWindow::viewWindow()
     connect(button1, &QPushButton::clicked, this, &viewWindow::add);
     connect(button2, &QPushButton::clicked, this, &viewWindow::remove);
     connect(button3, &QPushButton::clicked, this, &viewWindow::edit);
+    connect(button4, &QPushButton::clicked, this, &viewWindow::showUsersEditor);
     setLayout(mainVerticalLayout);
 }
 
@@ -101,5 +102,10 @@ void viewWindow::edit()
         QTableWidgetItem* item2 = table->item(i, 1);
         info->edit(info->tasks[i][0], item1->text(), item2->text());
     }
+}
+void viewWindow::showUsersEditor() 
+{
+    UsersEditor* window = new UsersEditor();  // Создаем окно в куче
+    window->show();                        // Показываем окно
 }
 
