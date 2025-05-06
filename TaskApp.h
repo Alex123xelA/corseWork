@@ -113,3 +113,14 @@ private slots:
     void edit();
     void updateStatusLabel();
 };
+
+class WorkersTasks
+{
+public:
+    WorkersTasks();
+    void add(QString name, QString id);
+    void remove(QString name, QString id);
+    QVector<QVector<QString>> workersTasks;
+private:
+    void saveChanges();
+};
