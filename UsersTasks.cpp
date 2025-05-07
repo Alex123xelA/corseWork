@@ -1,9 +1,11 @@
 #include "TaskApp.h"
-
+#include <QDir>
 WorkersTasks::WorkersTasks()
 {
     QFile file("WorkersTasks.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug() << "Текущая рабочая директория:" << QDir::currentPath();
+        qDebug() << file.errorString();
         qDebug() << "error";
     QString str = file.readAll();
     bool flagAdd;

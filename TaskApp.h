@@ -95,6 +95,17 @@ private:
     void saveChanges();
 };
 
+class WorkersTasks
+{
+public:
+    WorkersTasks();
+    void add(QString name, QString id);
+    void remove(QString name, QString id);
+    QVector<QVector<QString>> workersTasks;
+private:
+    void saveChanges();
+};
+
 class UsersEditor : public QWidget
 {
     Q_OBJECT
@@ -107,20 +118,12 @@ public:
     QSlider* ManagersSlider;
     QLabel* statusLabel;
     QSlider* topSlider;
+    WorkersTasks data;
 private slots:
-    void add();
+    void addTask();
+    void addUser();
     void remote();
     void edit();
     void updateStatusLabel();
 };
 
-class WorkersTasks
-{
-public:
-    WorkersTasks();
-    void add(QString name, QString id);
-    void remove(QString name, QString id);
-    QVector<QVector<QString>> workersTasks;
-private:
-    void saveChanges();
-};
