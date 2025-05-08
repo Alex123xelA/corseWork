@@ -127,3 +127,20 @@ private slots:
     void updateStatusLabel();
 };
 
+class WorkerWindow : public QWidget
+{
+    Q_OBJECT
+public:
+    WorkerWindow();
+private:
+    class tasks
+    {
+    public:
+        tasks();
+        QVector<QVector<QString>> completedTasks;
+        TextFile file;
+        void complete();
+    };
+private slots:
+    void save();
+};

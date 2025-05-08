@@ -107,8 +107,6 @@ UsersEditor::UsersEditor()
 
     bottomLayout->addLayout(rightLayout);
 
-    //Заполнение таблицы руководителей
-
     // 5. Статусная строка внизу
     statusLabel = new QLabel(this);
     updateStatusLabel(); // Устанавливаем начальное значение
