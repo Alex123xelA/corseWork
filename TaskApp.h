@@ -131,7 +131,10 @@ class WorkerWindow : public QWidget
 {
     Q_OBJECT
 public:
+    QString name;
     WorkerWindow();
+    TextFile info;
+    QLabel* label;
 private:
     class tasks
     {
@@ -143,4 +146,5 @@ private:
     };
 private slots:
     void save();
+    void updateLabel(int value);
 };
