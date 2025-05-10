@@ -16,6 +16,7 @@
 #include <QHBoxLayout>
 #include <iostream>
 #include <QLabel>
+#include <QDateTime>
 class TaskApp : public QMainWindow
 {
     Q_OBJECT
@@ -130,11 +131,6 @@ private slots:
 class WorkerWindow : public QWidget
 {
     Q_OBJECT
-public:
-    QString name;
-    WorkerWindow();
-    TextFile info;
-    QLabel* label;
 private:
     class tasks
     {
@@ -142,9 +138,24 @@ private:
         tasks();
         QVector<QVector<QString>> completedTasks;
         TextFile file;
-        void complete();
+        void complete(QString id);
+        int count(QString id);
+        QString last(QString id);
+        void clear(QString id);
+        void save();
     };
+    void reEnterTable();
+    QTableWidget* table;
+public:
+    QString name;
+    WorkerWindow();
+    TextFile info;
+    QSlider* slider;
+    QLabel* label;
+    tasks completedTasks;
+
 private slots:
     void save();
     void updateLabel(int value);
+    void clear();
 };
