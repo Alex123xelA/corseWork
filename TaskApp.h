@@ -120,6 +120,8 @@ public:
     QLabel* statusLabel;
     QSlider* topSlider;
     WorkersTasks data;
+    TextFile info;
+    QVector<QString> workers;
 private slots:
     void addTask();
     void addUser();

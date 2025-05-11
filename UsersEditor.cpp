@@ -12,7 +12,7 @@ UsersEditor::UsersEditor()
     
     //Получение информации о пользователях
 
-    QVector<QString> workers;
+    
     QVector<QString> managers;
 
     for (int i = 0; i < users.size; ++i) 
@@ -53,26 +53,36 @@ UsersEditor::UsersEditor()
     WorcersTable->setHorizontalHeaderLabels(workers);
     centerLayout->addWidget(WorcersTable);
 
-
-    //Заполнение таблицы рабочих
-
-    for (int i = 0; i < data.workersTasks.size(); ++i)
+    //заполнение таблицы рабочих
+    for (int i = 0; i < workers.size(); ++i) //перебор по именам
     {
-        bool flagWorker = 0;
-        for (int j = 0; j < workers.size(); ++j)
+        
+        for (int j = 0; j < data.workersTasks.size(); ++j) //нахождение задач для каждого имени
         {
-            if (data.workersTasks[i][0] == workers[j])
-                flagWorker = 1;
-        }
-        if (flagWorker ==1)
-            for (int  j = 1; j < data.workersTasks[i].size(); ++j)
-            {
-            qDebug()<< data.workersTasks[i][j];
-            WorcersTable->setRowCount(i + 1);
-            WorcersTable->setItem(i-2, j, new QTableWidgetItem(data.workersTasks[i][j]));
-            
+            if (workers[i] == data.workersTasks[j][0]) {
+                for (int k = 1; k < data.workersTasks[j].size()-1; ++k)//перебор по задачам
+                {
+                    //qDebug() << data.workersTasks[j][k];
+                    for (int q = 0; q < info.size; ++q) //название задачи для каждой задачи
+                    {
+                        //qDebug() << data.workersTasks[j][k] << info.tasks[q][0];
+                        if (data.workersTasks[j][k] == info.tasks[q][0]) 
+                        {
+                            
+                            WorcersTable->setRowCount(i + 1);
+                            WorcersTable->setItem(k-1, i, new QTableWidgetItem(info.tasks[q][1]));
+                            
+                            break;
+                        }
+                        
+                    }
+                }
+                break;
             }
+        }
+
     }
+    WorcersTable->resizeColumnsToContents();
 
     // Вертикальный слайдер в центре
     WorkersSlider = new QSlider(Qt::Vertical, this);
@@ -118,6 +128,7 @@ UsersEditor::UsersEditor()
     connect(WorkersSlider, &QSlider::valueChanged, this, &UsersEditor::updateStatusLabel);
     connect(ManagersSlider, &QSlider::valueChanged, this, &UsersEditor::updateStatusLabel);
     connect(button1, &QPushButton::clicked, this, &UsersEditor::addUser);
+    connect(button2, &QPushButton::clicked, this, &UsersEditor::addTask);
 
 }
 void UsersEditor::updateStatusLabel() 
@@ -129,12 +140,62 @@ void UsersEditor::updateStatusLabel()
 }
 void UsersEditor::addTask() 
 {
-    QString currentUser;
+    QDialog* addTaskDialog = new QDialog;
+    addTaskDialog->setWindowTitle("Добавление задачи пользователю");
+    addTaskDialog->setAttribute(Qt::WA_DeleteOnClose);
 
+    //поле для отображения имени пользователя
+
+    QLabel* name = new QLabel(workers[WorkersSlider->value()-1], addTaskDialog);
+
+    // поиск задач для добавления
+
+    QVector<QString> NamesOfTasks;
+    int index = 0; // индекс задач выбранного пользователя
+
+    for (int i = 0; i < data.workersTasks.size(); ++i) 
+    {
+        if (data.workersTasks[i][0] == workers[WorkersSlider->value() - 1]) 
+        {
+            index = i;
+            for (int k = 0; k < info.size; ++k)
+            {
+                bool flag = 0;
+                for (int j = 1; j < data.workersTasks[i].size(); ++j)
+                {
+                    if (data.workersTasks[i][j] != info.tasks[k][0]) 
+                    {
+                        flag = 1;
+                    }
+                }
+                if (flag == 1) 
+                {
+                    NamesOfTasks.append(info.tasks[k][1]);
+                }
+            }
+        }
+        
+    }
+    qDebug() << NamesOfTasks;
+
+    //QComboBox для выбора задачи, добавляемой пользователю
+
+    QComboBox* addTaskComboBox = new QComboBox(addTaskDialog);
+    addTaskComboBox->addItems(QStringList::fromVector(NamesOfTasks));
+    //Кнопка для добавления задачи
+
+    QPushButton* button = new QPushButton("Добавить задачу", addTaskDialog);
+
+    // слой для элементов диалогового окна
+    QVBoxLayout* layout = new QVBoxLayout(addTaskDialog);
+    layout->addWidget(name);
+    layout->addWidget(addTaskComboBox);
+    layout->addWidget(button);
+
+    addTaskDialog->exec();
 }
 void UsersEditor::addUser()
 {
-    qDebug() << "works";
     QDialog* addUserDialog = new QDialog;
     addUserDialog->setWindowTitle("Добавление пользователя");
     addUserDialog->setAttribute(Qt::WA_DeleteOnClose);
