@@ -148,12 +148,13 @@ private:
     QTableWidget* table;
 public:
     QString name;
-    WorkerWindow();
+    WorkerWindow(QString name);
     TextFile info;
     QSlider* slider;
     QLabel* label;
     tasks completedTasks;
-
+    WorkersTasks WorkersTasks; 
+    QVector<QString> forThisName;
 private slots:
     void save();
     void updateLabel(int value);

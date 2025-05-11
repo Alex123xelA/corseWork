@@ -9,7 +9,7 @@ void UsersFile::saveChanges()
 
     for (int i = 0; i < size; ++i)
     {
-        qDebug() << users[i].join("^^");
+        //qDebug() << users[i].join("^^");
         usersSorseFile << users[i].join("^^");
         if (i != size - 1)
             usersSorseFile << "~~~";

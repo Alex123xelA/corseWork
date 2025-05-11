@@ -63,8 +63,8 @@ void TaskApp::enterButtonClicked() {
     }
     if (status == 1) {
         //статус работника
-        WorkerWindow* workerWindow = new WorkerWindow;
-        workerWindow->name = name->text();
+        WorkerWindow* workerWindow = new WorkerWindow(name->text());
+        //workerWindow->name = name->text();
         workerWindow->show();
     }
 }
