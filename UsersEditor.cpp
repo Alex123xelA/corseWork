@@ -49,10 +49,8 @@ UsersEditor::UsersEditor()
     QHBoxLayout* centerLayout = new QHBoxLayout();
 
     // Таблица рабочих
-    WorcersTable = new QTableWidget(1, workers.size(), this);
-    WorcersTable->setHorizontalHeaderLabels(workers);
-    centerLayout->addWidget(WorcersTable);
-
+    
+    /*
     //заполнение таблицы рабочих
     for (int i = 0; i < workers.size(); ++i) //перебор по именам
     {
@@ -83,6 +81,51 @@ UsersEditor::UsersEditor()
 
     }
     WorcersTable->resizeColumnsToContents();
+    */
+
+    //заполнение таблицы
+
+    QVector<QVector<QString>> namesOftasksForName;
+    
+    for (int i = 0; i < data.workersTasks.size(); ++i) 
+    {
+        QVector<QString> namesOfTasks;
+        namesOfTasks.append(data.workersTasks[i][0]);
+        for (int j = 1; j < data.workersTasks[i].size(); ++j)
+        {   
+            for (int k = 0; k < info.size; ++k) 
+            {
+                //qDebug() << info.tasks[k][0] << data.workersTasks[i][j];
+                if (info.tasks[k][0] == data.workersTasks[i][j]) 
+                {
+                    namesOfTasks.append(info.tasks[k][1]);
+                    break;
+                }
+            }
+        }
+        namesOftasksForName.append(namesOfTasks);
+        
+    }
+    int maxElements = 0;
+    for (int i = 0; i < namesOftasksForName.size(); ++i) 
+    {
+        if (namesOftasksForName[i].size() > maxElements)
+            maxElements = namesOftasksForName[i].size();
+    }
+    qDebug() << namesOftasksForName;
+    WorcersTable = new QTableWidget(maxElements, workers.size(), this);
+    WorcersTable->setHorizontalHeaderLabels(workers);
+    centerLayout->addWidget(WorcersTable);
+    
+    for (int i = 0; i < namesOftasksForName.size(); ++i) 
+    {
+        
+            for (int j = 1; j < namesOftasksForName[i].size(); ++j)
+            {
+                WorcersTable->setItem(j-1, i, new QTableWidgetItem(namesOftasksForName[i][j]));
+            }
+        
+    }
 
     // Вертикальный слайдер в центре
     WorkersSlider = new QSlider(Qt::Vertical, this);
@@ -151,13 +194,13 @@ void UsersEditor::addTask()
     // поиск задач для добавления
 
     QVector<QString> NamesOfTasks;
-    int index = 0; // индекс задач выбранного пользователя
+    QVector<QString> idsOfTasks;
+    
 
     for (int i = 0; i < data.workersTasks.size(); ++i) 
     {
         if (data.workersTasks[i][0] == workers[WorkersSlider->value() - 1]) 
         {
-            index = i;
             for (int k = 0; k < info.size; ++k)
             {
                 bool flag = 0;
@@ -171,6 +214,7 @@ void UsersEditor::addTask()
                 if (flag == 1) 
                 {
                     NamesOfTasks.append(info.tasks[k][1]);
+                    idsOfTasks.append(info.tasks[k][0]);
                 }
             }
         }
@@ -181,7 +225,10 @@ void UsersEditor::addTask()
     //QComboBox для выбора задачи, добавляемой пользователю
 
     QComboBox* addTaskComboBox = new QComboBox(addTaskDialog);
-    addTaskComboBox->addItems(QStringList::fromVector(NamesOfTasks));
+    for (int i = 0; i < NamesOfTasks.size(); ++i) {
+        addTaskComboBox->addItem(NamesOfTasks[i]);             // Добавляем текст
+        addTaskComboBox->setItemData(i, idsOfTasks[i]);       // Привязываем ID
+    }
     //Кнопка для добавления задачи
 
     QPushButton* button = new QPushButton("Добавить задачу", addTaskDialog);
@@ -191,6 +238,14 @@ void UsersEditor::addTask()
     layout->addWidget(name);
     layout->addWidget(addTaskComboBox);
     layout->addWidget(button);
+
+    QObject::connect(button, &QPushButton::clicked, [=]() {
+        
+        data.add(workers[WorkersSlider->value() - 1], addTaskComboBox->currentData().toString());
+        qDebug() << addTaskComboBox->currentData().toString();
+        addTaskDialog->accept();
+        });
+
 
     addTaskDialog->exec();
 }
