@@ -52,7 +52,6 @@ void WorkersTasks::add(QString name, QString id)
     {
         workersTasks[index].append(id);
     }
-    //qDebug() << workersTasks;
     saveChanges();
 }
 void WorkersTasks::remove(QString name, QString id)

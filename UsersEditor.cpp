@@ -37,8 +37,8 @@ UsersEditor::UsersEditor()
 
     QPushButton* button1 = new QPushButton("Добавить пользователя", this);
     QPushButton* button2 = new QPushButton("Добавить задачу пользователю", this);
-    QPushButton* button3 = new QPushButton("Удалить", this);
-    QPushButton* button4 = new QPushButton("Сохранить", this);
+    QPushButton* button3 = new QPushButton("Удалить пользователя", this);
+    QPushButton* button4 = new QPushButton("Удалить задачу у пользователя", this);
     leftButtonsLayout->addWidget(button1);
     leftButtonsLayout->addWidget(button2);
     leftButtonsLayout->addWidget(button3);
@@ -50,40 +50,6 @@ UsersEditor::UsersEditor()
 
     // Таблица рабочих
     
-    /*
-    //заполнение таблицы рабочих
-    for (int i = 0; i < workers.size(); ++i) //перебор по именам
-    {
-        
-        for (int j = 0; j < data.workersTasks.size(); ++j) //нахождение задач для каждого имени
-        {
-            if (workers[i] == data.workersTasks[j][0]) {
-                for (int k = 1; k < data.workersTasks[j].size()-1; ++k)//перебор по задачам
-                {
-                    //qDebug() << data.workersTasks[j][k];
-                    for (int q = 0; q < info.size; ++q) //название задачи для каждой задачи
-                    {
-                        //qDebug() << data.workersTasks[j][k] << info.tasks[q][0];
-                        if (data.workersTasks[j][k] == info.tasks[q][0]) 
-                        {
-                            
-                            WorcersTable->setRowCount(i + 1);
-                            WorcersTable->setItem(k-1, i, new QTableWidgetItem(info.tasks[q][1]));
-                            
-                            break;
-                        }
-                        
-                    }
-                }
-                break;
-            }
-        }
-
-    }
-    WorcersTable->resizeColumnsToContents();
-    */
-
-    //заполнение таблицы
 
     QVector<QVector<QString>> namesOftasksForName;
     
@@ -298,11 +264,13 @@ void UsersEditor::addUser()
 
     addUserDialog->exec();
 }
-void UsersEditor::remote() 
+void UsersEditor::remoteUser() 
+{
+    int currentStatus = topSlider->value();
+    
+    //if (curre)
+}
+void UsersEditor::remoteTask()
 {
 
-}
-void UsersEditor::edit() 
-{
-	
 }

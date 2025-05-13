@@ -125,8 +125,8 @@ public:
 private slots:
     void addTask();
     void addUser();
-    void remote();
-    void edit();
+    void remoteUser();
+    void remoteTask();
     void updateStatusLabel();
 };
 

@@ -1,12 +1,5 @@
 #include "TaskApp.h"
 
-
-
-//ползователь - его задачи - доделать
-
-
-
-
 WorkerWindow::WorkerWindow(QString name)
 {
     // Основной слей (вертикальный)
