@@ -75,6 +75,7 @@ private slots:
     void remove();
     void edit();
     void showUsersEditor();
+    void showShareWindow();
 private:
     void updateStatusLabel(int value);
     TextFile* info;

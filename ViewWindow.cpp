@@ -1,4 +1,5 @@
 #include "TaskApp.h"
+#include "asioModule.h"
 
 viewWindow::viewWindow()
 {
@@ -18,11 +19,13 @@ viewWindow::viewWindow()
     QPushButton* button2 = new QPushButton("Удалить", this);
     QPushButton* button3 = new QPushButton("Сохранить", this);
     QPushButton* button4 = new QPushButton("Открыть окно\nредактирования пользователей", this);
+    QPushButton* buttonShare = new QPushButton("Открыть окно\nотправки данных", this);
 
     buttonLayout->addWidget(button1);
     buttonLayout->addWidget(button2);
     buttonLayout->addWidget(button3);
     buttonLayout->addWidget(button4);
+    buttonLayout->addWidget(buttonShare);
     buttonLayout->addStretch();
 
     // 2. Центральная часть: таблица
@@ -66,6 +69,7 @@ viewWindow::viewWindow()
     connect(button2, &QPushButton::clicked, this, &viewWindow::remove);
     connect(button3, &QPushButton::clicked, this, &viewWindow::edit);
     connect(button4, &QPushButton::clicked, this, &viewWindow::showUsersEditor);
+    connect(buttonShare, &QPushButton::clicked, this, &viewWindow::showShareWindow);
     setLayout(mainVerticalLayout);
 }
 
@@ -109,3 +113,9 @@ void viewWindow::showUsersEditor()
     window->show();                        // Показываем окно
 }
 
+void viewWindow::showShareWindow() 
+{
+    shareWindow* window = new shareWindow();
+    window->setWindowTitle("Принять/получить данные задач и пользователей");
+    window->show();
+}
