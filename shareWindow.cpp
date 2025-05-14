@@ -29,7 +29,7 @@ shareWindow::shareWindow()
 
 	connect(confirmButton, &QPushButton::clicked, this, &shareWindow::share);
 }
-
+/*
 void shareWindow::share() 
 {
 	if (roleComboBox->currentText() == "Получать данные") 
@@ -53,14 +53,16 @@ void shareWindow::share()
 
 			// Список файлов для отправки
 			std::vector<std::string> files = {
-				"file1.txt",
-				"file2.txt",
-				"file3.txt",
-				"file4.txt"
+				
+				"Users.txt",
+				"Tasks.txt",
+				"WorkersTasks.txt",
+				"CompleteInfo.txt"
 			};
 
 			// Отправляем каждый файл
 			for (const auto& file : files) {
+				qDebug() << file;
 				client.send_file(file);
 			}
 		}
@@ -69,4 +71,53 @@ void shareWindow::share()
 		}
 		qDebug() << "client";
 	}
+}*/
+
+void shareWindow::share() {
+	if (roleComboBox->currentText() == "Получать данные") {
+		std::thread([this]() {
+			try {
+				boost::asio::io_context io_context;
+				Server server(io_context, 1234);
+				qDebug() << "Server started on port 1234";
+				io_context.run();
+			}
+			catch (const std::exception& e) {
+				qDebug() << "Server exception:" << e.what();
+			}
+			}).detach();
+	}
+	else {
+		sendFile("Tasks.txt");
+		sendFile("Users.txt");
+		sendFile("CompletionInfo.txt");
+		sendFile("WorkersTasks.txt");
+
+	}
+}
+
+void shareWindow::sendFile(std::string fileName) 
+{
+	std::thread([this, fileName]() {
+		try {
+			boost::asio::io_context io_context;
+			Client client(io_context, "127.0.0.1", "1234");
+			std::vector<std::string> files = {
+				fileName
+			};
+
+			for (const auto& file : files) {
+				try {
+					client.send_file(file);
+				}
+				catch (...) {
+					qDebug() << "Error sending file:" << file.c_str();
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			}
+		}
+		catch (const std::exception& e) {
+			qDebug() << "Client exception:" << e.what();
+		}
+		}).detach();
 }

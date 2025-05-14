@@ -123,12 +123,16 @@ public:
     WorkersTasks data;
     TextFile info;
     QVector<QString> workers;
+    QVector<QString> managers;
 private slots:
     void addTask();
     void addUser();
-    void remoteUser();
-    void remoteTask();
+    void removeUser();
+    void removeTask();
     void updateStatusLabel();
+private:
+    void updateWorkersTable();
+    void updateManagersTable();
 };
 
 class WorkerWindow : public QWidget

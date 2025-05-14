@@ -12,9 +12,6 @@ UsersEditor::UsersEditor()
     
     //Получение информации о пользователях
 
-    
-    QVector<QString> managers;
-
     for (int i = 0; i < users.size; ++i) 
     {
         if (users.users[i][2] == "0")
@@ -32,7 +29,7 @@ UsersEditor::UsersEditor()
     // Горизонтальный layout для нижней части
     QHBoxLayout* bottomLayout = new QHBoxLayout();
 
-    // 2. Три кнопки слева
+    // 2. Четыре кнопки слева
     QVBoxLayout* leftButtonsLayout = new QVBoxLayout();
 
     QPushButton* button1 = new QPushButton("Добавить пользователя", this);
@@ -48,50 +45,12 @@ UsersEditor::UsersEditor()
     // 3. Центральная часть с таблицей рабочих и вертикальным слайдером
     QHBoxLayout* centerLayout = new QHBoxLayout();
 
-    // Таблица рабочих
-    
 
-    QVector<QVector<QString>> namesOftasksForName;
+
+    WorcersTable = new QTableWidget(1, workers.size(), this);
+    updateWorkersTable();
     
-    for (int i = 0; i < data.workersTasks.size(); ++i) 
-    {
-        QVector<QString> namesOfTasks;
-        namesOfTasks.append(data.workersTasks[i][0]);
-        for (int j = 1; j < data.workersTasks[i].size(); ++j)
-        {   
-            for (int k = 0; k < info.size; ++k) 
-            {
-                //qDebug() << info.tasks[k][0] << data.workersTasks[i][j];
-                if (info.tasks[k][0] == data.workersTasks[i][j]) 
-                {
-                    namesOfTasks.append(info.tasks[k][1]);
-                    break;
-                }
-            }
-        }
-        namesOftasksForName.append(namesOfTasks);
-        
-    }
-    int maxElements = 0;
-    for (int i = 0; i < namesOftasksForName.size(); ++i) 
-    {
-        if (namesOftasksForName[i].size() > maxElements)
-            maxElements = namesOftasksForName[i].size();
-    }
-    qDebug() << namesOftasksForName;
-    WorcersTable = new QTableWidget(maxElements, workers.size(), this);
-    WorcersTable->setHorizontalHeaderLabels(workers);
     centerLayout->addWidget(WorcersTable);
-    
-    for (int i = 0; i < namesOftasksForName.size(); ++i) 
-    {
-        
-            for (int j = 1; j < namesOftasksForName[i].size(); ++j)
-            {
-                WorcersTable->setItem(j-1, i, new QTableWidgetItem(namesOftasksForName[i][j]));
-            }
-        
-    }
 
     // Вертикальный слайдер в центре
     WorkersSlider = new QSlider(Qt::Vertical, this);
@@ -138,6 +97,8 @@ UsersEditor::UsersEditor()
     connect(ManagersSlider, &QSlider::valueChanged, this, &UsersEditor::updateStatusLabel);
     connect(button1, &QPushButton::clicked, this, &UsersEditor::addUser);
     connect(button2, &QPushButton::clicked, this, &UsersEditor::addTask);
+    connect(button3, &QPushButton::clicked, this, &UsersEditor::removeUser);
+    connect(button4, &QPushButton::clicked, this, &UsersEditor::removeTask);
 
 }
 void UsersEditor::updateStatusLabel() 
@@ -162,31 +123,46 @@ void UsersEditor::addTask()
     QVector<QString> NamesOfTasks;
     QVector<QString> idsOfTasks;
     
+    QString nameOfUser = workers[WorkersSlider->value() - 1];
+    QVector<QString> UserTasks = {};
 
-    for (int i = 0; i < data.workersTasks.size(); ++i) 
+    for (int i = 0; i < data.workersTasks.size(); ++i) // поиск задач для выбранного пользователя
     {
-        if (data.workersTasks[i][0] == workers[WorkersSlider->value() - 1]) 
-        {
-            for (int k = 0; k < info.size; ++k)
-            {
-                bool flag = 0;
-                for (int j = 1; j < data.workersTasks[i].size(); ++j)
-                {
-                    if (data.workersTasks[i][j] != info.tasks[k][0]) 
-                    {
-                        flag = 1;
-                    }
-                }
-                if (flag == 1) 
-                {
-                    NamesOfTasks.append(info.tasks[k][1]);
-                    idsOfTasks.append(info.tasks[k][0]);
-                }
-            }
-        }
-        
+        if (data.workersTasks[i][0] == nameOfUser)
+            UserTasks = data.workersTasks[i];
     }
-    qDebug() << NamesOfTasks;
+    //qDebug() << "TASKS" << UserTasks<< nameOfUser<< data.workersTasks;
+    if (!UserTasks.isEmpty()) //проверкаа на пользователя без заадч
+    {
+        //поиск задач, которые можно добавить пользователю
+
+        for (int i = 0; i < info.size; ++i) //перебор всех задач
+        {
+            bool flag = 1;//флаг того, что задачи нет
+            for (int j = 1; j < UserTasks.size(); ++j) // перебор по задачам выбранного пользоваетля
+            {
+                if (UserTasks[j] == info.tasks[i][0]) 
+                {
+                    flag = 0;
+                }
+            } 
+            if (flag == 1)
+            {
+                NamesOfTasks.append(info.tasks[i][1]);
+                idsOfTasks.append(info.tasks[i][0]);
+            } // оставляем только те задачи, которых нет у пользователя
+        }
+    }
+    else 
+    {
+        for (int i = 0; i < info.size; ++i)
+        {
+            NamesOfTasks.append(info.tasks[i][1]);
+            idsOfTasks.append(info.tasks[i][0]);
+        }
+    }// для пользователя без задач оставляем все
+    
+    //qDebug() << NamesOfTasks;
 
     //QComboBox для выбора задачи, добавляемой пользователю
 
@@ -208,7 +184,7 @@ void UsersEditor::addTask()
     QObject::connect(button, &QPushButton::clicked, [=]() {
         
         data.add(workers[WorkersSlider->value() - 1], addTaskComboBox->currentData().toString());
-        qDebug() << addTaskComboBox->currentData().toString();
+        qDebug()<< "NAME" << workers[WorkersSlider->value() - 1] << addTaskComboBox->currentData().toString();
         addTaskDialog->accept();
         });
 
@@ -263,14 +239,80 @@ void UsersEditor::addUser()
         });
 
     addUserDialog->exec();
+    updateWorkersTable();
+    updateManagersTable();
 }
-void UsersEditor::remoteUser() 
+void UsersEditor::removeUser() 
 {
     int currentStatus = topSlider->value();
-    
-    //if (curre)
+    QString nameOfCurrentUser;
+    if (currentStatus == 1)
+    {
+        int indexOfCurrentUser = WorkersSlider->value()-1;
+        nameOfCurrentUser = workers[indexOfCurrentUser];
+        qDebug() << nameOfCurrentUser;
+    }
+    else 
+    {
+        int indexOfCurrentUser = ManagersSlider->value() - 1;
+        nameOfCurrentUser = managers[indexOfCurrentUser];
+        qDebug() << nameOfCurrentUser;
+    }
+    users.remove(nameOfCurrentUser);
 }
-void UsersEditor::remoteTask()
+void UsersEditor::removeTask()
 {
 
+}
+
+void UsersEditor::updateManagersTable()
+{
+
+}
+
+void UsersEditor::updateWorkersTable()
+{
+    // Таблица рабочих
+
+
+    QVector<QVector<QString>> namesOftasksForName;
+
+    for (int i = 0; i < data.workersTasks.size(); ++i)
+    {
+        QVector<QString> namesOfTasks;
+        namesOfTasks.append(data.workersTasks[i][0]);
+        for (int j = 1; j < data.workersTasks[i].size(); ++j)
+        {
+            for (int k = 0; k < info.size; ++k)
+            {
+                //qDebug() << info.tasks[k][0] << data.workersTasks[i][j];
+                if (info.tasks[k][0] == data.workersTasks[i][j])
+                {
+                    namesOfTasks.append(info.tasks[k][1]);
+                    break;
+                }
+            }
+        }
+        namesOftasksForName.append(namesOfTasks);
+
+    }
+    int maxElements = 0;
+    for (int i = 0; i < namesOftasksForName.size(); ++i)
+    {
+        if (namesOftasksForName[i].size() > maxElements)
+            maxElements = namesOftasksForName[i].size();
+    }
+    qDebug() << namesOftasksForName;
+    WorcersTable->setHorizontalHeaderLabels(workers);
+    WorcersTable->setRowCount(maxElements-1);
+    WorcersTable->setColumnCount(workers.size());
+    for (int i = 0; i < namesOftasksForName.size(); ++i)
+    {
+
+        for (int j = 1; j < namesOftasksForName[i].size(); ++j)
+        {
+            WorcersTable->setItem(j - 1, i, new QTableWidgetItem(namesOftasksForName[i][j]));
+        }
+
+    }
 }

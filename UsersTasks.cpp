@@ -33,6 +33,7 @@ void WorkersTasks::add(QString name, QString id)
 {
     bool flagUniqe = 1;
     int index = 0;
+  
     for (int i = 0; i < workersTasks.size(); ++i)
     {
         if (workersTasks[i][0] == name)
@@ -54,12 +55,14 @@ void WorkersTasks::add(QString name, QString id)
     }
     saveChanges();
 }
-void WorkersTasks::remove(QString name, QString id)
+void WorkersTasks::remove(QString name, QString id)//это надо переделать/////////////////////////////////////////////////////////////////////////////////////////////
 {
+    bool emptyFlag = 1;// флаг того, что у пользователя нет задач
     for (int i = 0; i < workersTasks.size(); ++i)
     {
         if (workersTasks[i][0] == name)
         {
+            emptyFlag = 0;
             for (int j = 0; j < workersTasks[i].size(); ++j)
             {
                 if (workersTasks[i][j] == id)
@@ -70,6 +73,10 @@ void WorkersTasks::remove(QString name, QString id)
             }
         }
     }
+    if (emptyFlag == 1) 
+    {
+        workersTasks.append({name, id});
+    }
     qDebug() << workersTasks;
     saveChanges();
 }
@@ -78,16 +85,17 @@ void WorkersTasks::saveChanges()
     QFile file("WorkersTasks.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         qDebug() << "error";
-
+    qDebug() << "DATA" << workersTasks;
     QTextStream save(&file);
     for (QVector<QString> elem : workersTasks)
     {
+        qDebug() << "ELEM" << elem;
         for (int i = 1; i < elem.size(); ++i)
         {
-            if (i != elem.size() - 1)
-                save << elem[0] << "^^" << elem[i] << "~~~";
+            if (i == 1)
+                save << elem[0] << "^^" << elem[i] ;
             else
-                save << elem[0] << "^^" << elem[i];
+                save <<"~~~" << elem[0] << "^^" << elem[i];
         }
     }
 
