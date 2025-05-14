@@ -258,10 +258,70 @@ void UsersEditor::removeUser()
         qDebug() << nameOfCurrentUser;
     }
     users.remove(nameOfCurrentUser);
+    updateWorkersTable();
+    updateManagersTable();
 }
 void UsersEditor::removeTask()
 {
+    int currentStatus = topSlider->value();
+    if (currentStatus == 1)// задачи могут быть удалены только у рабочих
+    {
+        //диалог для удаления задачи
+        QDialog* removeTaskDialog = new QDialog;
+        removeTaskDialog->setWindowTitle("Удаление задачи пользователя");
+        removeTaskDialog->setAttribute(Qt::WA_DeleteOnClose);
 
+        //поле для отображения имени пользователя
+
+        QLabel* name = new QLabel("Пользователь - "+workers[WorkersSlider->value() - 1], removeTaskDialog);
+
+        QString nameOfCurrentUser;
+
+        int indexOfCurrentUser = WorkersSlider->value() - 1;
+        nameOfCurrentUser = workers[indexOfCurrentUser];
+        qDebug() << nameOfCurrentUser;
+        int itemIndex = 0;
+        QComboBox* removeTaskComboBox = new QComboBox(removeTaskDialog);
+        for (int i = 0; i < data.workersTasks.size(); ++i) {
+            if (data.workersTasks[i][0] == nameOfCurrentUser)
+            for (int j = 1; j < data.workersTasks[i].size(); ++j) {
+                for (int k = 0; k < info.size; ++k) 
+                {
+                    if (info.tasks[k][0] == data.workersTasks[i][j])
+                    {
+                        removeTaskComboBox->addItem(info.tasks[k][1]);
+                        break;
+                    }
+                }
+                             // Добавляем текст
+                removeTaskComboBox->setItemData(itemIndex , data.workersTasks[i][j]);       // Привязываем ID
+                itemIndex++;
+                qDebug() << i<< data.workersTasks[i][j];
+            }
+        }
+        // кнопка для удаления
+        QPushButton* button = new QPushButton("Удалить задачу", removeTaskDialog);
+
+        // слой для элементов диалогового окна
+        QVBoxLayout* layout = new QVBoxLayout(removeTaskDialog);
+        layout->addWidget(name);
+        layout->addWidget(removeTaskDialog);
+        layout->addWidget(button);
+
+        QObject::connect(button, &QPushButton::clicked, [=]() {
+
+            data.remove(workers[WorkersSlider->value() - 1], removeTaskComboBox->currentData().toString());
+            qDebug() << "NAME" << workers[WorkersSlider->value() - 1] << removeTaskComboBox->currentData().toString();
+            updateWorkersTable();
+            removeTaskDialog->accept();
+            });
+
+        removeTaskDialog->resize(200, 200);
+        removeTaskDialog->exec();
+        updateWorkersTable();
+
+
+    }
 }
 
 void UsersEditor::updateManagersTable()
