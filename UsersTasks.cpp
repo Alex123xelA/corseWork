@@ -28,6 +28,7 @@ WorkersTasks::WorkersTasks()
         }
     }
     qDebug() << workersTasks;
+    clearTrash();
 }
 void WorkersTasks::add(QString name, QString id)
 {
@@ -113,4 +114,59 @@ void WorkersTasks::saveChanges()
         }
     }
 
+}
+
+
+void WorkersTasks::clearTrash() 
+{
+    TextFile tf;
+    UsersFile users;
+
+    //id существующих задач
+
+    QVector<QString> actualIds;
+    for (int i = 0; i < tf.size; ++i) 
+    {
+        actualIds.append(tf.tasks[i][0]);
+    }
+
+    //имена существующих работников
+
+    QVector<QString> actualUsers;
+    for (int i = 0; i < users.size; ++i)
+    {
+        actualUsers.append(users.users[i][0]);
+    }
+
+    //удаление несуществующих работников
+
+    for (int i = 0; i < workersTasks.size(); ++i) 
+    {
+        bool actual = 0;
+        for (int j = 0; j < actualUsers.size(); ++j)
+        {
+            if (workersTasks[i][0] == actualUsers[j])
+                actual = 1;
+        }
+        if (actual == 0)
+            workersTasks.remove(i);
+    }
+
+    //удаление несуществующих задач
+    for (int i = 0; i < workersTasks.size(); ++i) //для пользователя
+    {
+        for (int j = 1; j < workersTasks[i].size(); ++j) // для задачи
+        {
+            bool actual = 0;
+            for (int k = 0; k < actualIds.size(); ++k)
+            {
+                if (workersTasks[i][j] == actualIds[k])
+                    actual = 1;
+            }
+            if (actual == 0)
+                workersTasks[i].remove(j);
+        }
+    }
+
+    saveChanges();
 }

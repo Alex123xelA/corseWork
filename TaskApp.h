@@ -106,6 +106,7 @@ public:
     QVector<QVector<QString>> workersTasks;
 private:
     void saveChanges();
+    void clearTrash();
 };
 
 class UsersEditor : public QWidget
