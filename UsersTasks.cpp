@@ -31,13 +31,16 @@ WorkersTasks::WorkersTasks()
 }
 void WorkersTasks::add(QString name, QString id)
 {
+
     bool flagUniqe = 1;
+    bool flagNewName = 1;
     int index = 0;
-  
+    qDebug()<<"WT" << workersTasks;
     for (int i = 0; i < workersTasks.size(); ++i)
     {
         if (workersTasks[i][0] == name)
         {
+            flagNewName = 0;
             index = i;
             for (int j = 0; j < workersTasks[i].size(); ++j)
             {
@@ -49,14 +52,20 @@ void WorkersTasks::add(QString name, QString id)
             }
         }
     }
-    if (flagUniqe == 1)
+    if (flagNewName == 1) 
+    {
+        workersTasks.append({name, id});
+    }
+    else if (flagUniqe == 1)
     {
         workersTasks[index].append(id);
     }
     saveChanges();
 }
-void WorkersTasks::remove(QString name, QString id)//это надо переделать/////////////////////////////////////////////////////////////////////////////////////////////
+void WorkersTasks::remove(QString name, QString id)
 {
+   
+
     bool emptyFlag = 1;// флаг того, что у пользователя нет задач
     for (int i = 0; i < workersTasks.size(); ++i)
     {
@@ -73,11 +82,12 @@ void WorkersTasks::remove(QString name, QString id)//это надо перед�
             }
         }
     }
-    if (emptyFlag == 1) 
+    if (emptyFlag == 1)
     {
-        workersTasks.append({name, id});
+        workersTasks.append({ name, id });
     }
-    qDebug() << workersTasks;
+
+
     saveChanges();
 }
 void WorkersTasks::saveChanges()
@@ -85,15 +95,19 @@ void WorkersTasks::saveChanges()
     QFile file("WorkersTasks.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         qDebug() << "error";
-    qDebug() << "DATA" << workersTasks;
+    //qDebug() << "DATA" << workersTasks;
     QTextStream save(&file);
+    bool flagFirst = 1;
     for (QVector<QString> elem : workersTasks)
     {
-        qDebug() << "ELEM" << elem;
+        //qDebug() << "ELEM" << elem;
         for (int i = 1; i < elem.size(); ++i)
         {
-            if (i == 1)
-                save << elem[0] << "^^" << elem[i] ;
+            if (flagFirst == 1) 
+            {
+                save << elem[0] << "^^" << elem[i];
+                flagFirst = 0;
+            }
             else
                 save <<"~~~" << elem[0] << "^^" << elem[i];
         }

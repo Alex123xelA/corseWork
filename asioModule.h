@@ -77,27 +77,7 @@ private:
                     }
                 });
         }
-        /*
-        void process_file() {
-            try {
-                // Открываем файл в режиме добавления
-                std::ofstream file(filename_, std::ios::app | std::ios::binary);
-                if (file) {
-                    file.write("~~~",3);
-                    file.write(file_content_.data(), file_content_.size());
-                    file.close();
-                    std::cout << "Обработан файл: " << filename_
-                        << ", добавлено " << file_content_.size() << " байт\n";
-                }
-                else {
-                    std::cerr << "Не удалось открыть файл: " << filename_ << "\n";
-                }
-            }
-            catch (const std::exception& e) {
-                std::cerr << "Ошибка обработки файла: " << e.what() << "\n";
-            }
-        }
-        */
+   
         void process_file() {
             try {
                 // Добавляем логгирование
@@ -152,48 +132,6 @@ public:
         connect(host, port);
     }
 
-    /*void send_file(const std::string& filename) {
-        try {
-            // Читаем содержимое файла
-            std::ifstream file(filename, std::ios::binary | std::ios::ate);
-            if (!file) {
-                qDebug() << "can not open file: " << filename << "\n";
-                return;
-            }
-
-            std::streamsize size = file.tellg();
-            file.seekg(0, std::ios::beg);
-
-            std::vector<char> buffer(size);
-            if (!file.read(buffer.data(), size)) {
-                qDebug() << "can not read file: " << filename << "\n";
-                return;
-            }
-
-            // Подготавливаем заголовок
-            struct FileHeader {
-                uint32_t filename_length;
-                uint32_t content_length;
-            } header;
-
-            header.filename_length = static_cast<uint32_t>(filename.size());
-            header.content_length = static_cast<uint32_t>(buffer.size());
-
-            // Отправляем данные
-            std::vector<boost::asio::const_buffer> buffers;
-            buffers.push_back(boost::asio::buffer(&header, sizeof(header)));
-            buffers.push_back(boost::asio::buffer(filename));
-            buffers.push_back(boost::asio::buffer(buffer));
-
-            boost::asio::write(socket_, buffers);
-
-            //qDebug() << "file sended: " << filename
-                //<< ", size: " << size << " bytes\n";
-        }
-        catch (const std::exception& e) {
-            qDebug() << "send error: " << e.what() << "\n";
-        }
-    }*/
     void send_file(const std::string& filename) {
         try {
             // Проверка существования файла

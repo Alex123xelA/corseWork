@@ -71,10 +71,7 @@ UsersEditor::UsersEditor()
 
     //Заполнение таблицы руководителей
 
-    for (int i = 0; i < managers.size(); ++i) 
-    {
-        ManagersTable->setItem(0, i, new QTableWidgetItem("Руководитель"));
-    }
+    updateManagersTable();
 
     // Вертикальный слайдер справа
     ManagersSlider = new QSlider(Qt::Vertical, this);
@@ -130,6 +127,7 @@ void UsersEditor::addTask()
     {
         if (data.workersTasks[i][0] == nameOfUser)
             UserTasks = data.workersTasks[i];
+        qDebug()<<"NAME" << data.workersTasks[i][0];
     }
     //qDebug() << "TASKS" << UserTasks<< nameOfUser<< data.workersTasks;
     if (!UserTasks.isEmpty()) //проверкаа на пользователя без заадч
@@ -185,10 +183,11 @@ void UsersEditor::addTask()
         
         data.add(workers[WorkersSlider->value() - 1], addTaskComboBox->currentData().toString());
         qDebug()<< "NAME" << workers[WorkersSlider->value() - 1] << addTaskComboBox->currentData().toString();
+        updateWorkersTable();
         addTaskDialog->accept();
         });
 
-
+    
     addTaskDialog->exec();
 }
 void UsersEditor::addUser()
@@ -267,7 +266,10 @@ void UsersEditor::removeTask()
 
 void UsersEditor::updateManagersTable()
 {
-
+    for (int i = 0; i < managers.size(); ++i)
+    {
+        ManagersTable->setItem(0, i, new QTableWidgetItem("Руководитель"));
+    }
 }
 
 void UsersEditor::updateWorkersTable()

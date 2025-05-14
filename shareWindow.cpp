@@ -29,49 +29,7 @@ shareWindow::shareWindow()
 
 	connect(confirmButton, &QPushButton::clicked, this, &shareWindow::share);
 }
-/*
-void shareWindow::share() 
-{
-	if (roleComboBox->currentText() == "Получать данные") 
-	{
-		try {
-			boost::asio::io_context io_context;
-			Server server(io_context, 1234);
-			std::cout << "Сервер запущен на порту 1234\n";
-			io_context.run();
-		}
-		catch (const std::exception& e) {
-			std::cerr << "Исключение: " << e.what() << "\n";
-		}
-		qDebug() << "server";
-	}
-	else 
-	{
-		try {
-			boost::asio::io_context io_context;
-			Client client(io_context, "127.0.0.1", "1234");
 
-			// Список файлов для отправки
-			std::vector<std::string> files = {
-				
-				"Users.txt",
-				"Tasks.txt",
-				"WorkersTasks.txt",
-				"CompleteInfo.txt"
-			};
-
-			// Отправляем каждый файл
-			for (const auto& file : files) {
-				qDebug() << file;
-				client.send_file(file);
-			}
-		}
-		catch (const std::exception& e) {
-			qDebug() << "exception: " << e.what() << "\n";
-		}
-		qDebug() << "client";
-	}
-}*/
 
 void shareWindow::share() {
 	if (roleComboBox->currentText() == "Получать данные") {
