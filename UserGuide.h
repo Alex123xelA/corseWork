@@ -15,11 +15,13 @@ class UserGuide : public QMainWindow
 	Q_OBJECT
 public:
 	UserGuide();
-	//void openPage();
+	void openPage(int page);
 	QVector<QVector<QString>> pages;
+	int currentPage;
 private slots:
-	//void nextPage();
-	//void previousPage();
+	void next();
+	void previous();
 private:
-
+	QTextEdit* textEdit;
+	QLabel* titleLabel;
 };

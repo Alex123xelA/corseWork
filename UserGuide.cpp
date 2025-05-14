@@ -28,6 +28,9 @@ UserGuide::UserGuide()
     for (int i = 0; i < pages.size(); ++i) {
         QPushButton* button = new QPushButton(pages[i][0], this);
         leftButtonLayout->addWidget(button);
+        connect(button, &QPushButton::clicked, this, [this, i]() {
+            this->openPage(i);
+            });
     }
     leftButtonLayout->addStretch(); // Добавляем растяжку внизу
 
@@ -35,14 +38,15 @@ UserGuide::UserGuide()
     QVBoxLayout* rightLayout = new QVBoxLayout();
 
     // Заголовок сверху по центру
-    QLabel* titleLabel = new QLabel("Заголовок окна", this);
+    titleLabel = new QLabel("Заголовок окна", this);
     titleLabel->setAlignment(Qt::AlignCenter);
     QFont font = titleLabel->font();
     font.setPointSize(16);
     titleLabel->setFont(font);
 
     // Большое текстовое поле
-    QTextEdit* textEdit = new QTextEdit(this);
+    textEdit = new QTextEdit(this);
+    textEdit->setReadOnly(true);
 
     // Нижняя панель с кнопками "назад" и "вперед"
     QHBoxLayout* bottomLayout = new QHBoxLayout();
@@ -62,7 +66,31 @@ UserGuide::UserGuide()
     mainLayout->addLayout(leftButtonLayout, 1); // Левая часть занимает 1 часть
     mainLayout->addLayout(rightLayout, 3);     // Правая часть занимает 3 части
 
+    //открытие первой страницы
+    openPage(0);
+
     // Настройки окна
     setWindowTitle("Руководство по работе с программой");
     resize(800, 600);
+    connect(backButton, &QPushButton::clicked, this, &UserGuide::previous);
+    connect(forwardButton, &QPushButton::clicked, this, &UserGuide::next);
+}
+
+void UserGuide::openPage(int page) 
+{
+    currentPage = page;
+    titleLabel->setText(pages[page][0]);
+    textEdit->setText(pages[page][1]);
+}
+
+void UserGuide::next() 
+{
+    if (currentPage != pages.size() - 1)
+        openPage(currentPage + 1);
+}
+
+void UserGuide::previous() 
+{
+    if (currentPage != 0)
+        openPage(currentPage - 1);
 }
