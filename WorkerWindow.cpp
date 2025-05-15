@@ -67,7 +67,7 @@ WorkerWindow::WorkerWindow(QString name)
     connect(ClearButton, &QPushButton::clicked, this, &WorkerWindow::clear);
 }
 
-WorkerWindow::tasks::tasks() 
+tasks::tasks() 
 {
     QFile file("CompletionInfo.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -80,9 +80,10 @@ WorkerWindow::tasks::tasks()
         completedTasks.append(elem.split("^^"));
     }
     file.close();
+    deleteTrash();
 }
 
-void WorkerWindow::tasks::complete(QString id)
+void tasks::complete(QString id)
 {
     //текущее время - время выполнения задачи
     QString currentTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
@@ -91,7 +92,7 @@ void WorkerWindow::tasks::complete(QString id)
     save();
 }
 
-void WorkerWindow::tasks::save() 
+void tasks::save() 
 {
     QFile file("CompletionInfo.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -107,7 +108,7 @@ void WorkerWindow::tasks::save()
     }
 }
 
-void WorkerWindow::tasks::clear(QString id) 
+void tasks::clear(QString id) 
 {
     for (int i = 0; i < completedTasks.size(); )
     {
@@ -123,7 +124,7 @@ void WorkerWindow::tasks::clear(QString id)
     save();
 }
 
-int  WorkerWindow::tasks::count(QString id) 
+int  tasks::count(QString id) 
 {
     int count = 0;
     for (int i = 0; i < completedTasks.size(); ++i)
@@ -136,7 +137,7 @@ int  WorkerWindow::tasks::count(QString id)
     return count;
 }
 
-QString  WorkerWindow::tasks::last(QString id) 
+QString  tasks::last(QString id) 
 {
     QString lastTime="ещё не выполнено";
     for (int i = 0; i < completedTasks.size(); ++i)
@@ -190,4 +191,33 @@ void WorkerWindow::reEnterTable()
     }
     table->resizeColumnsToContents();
 
+}
+
+void tasks::deleteTrash() 
+{   
+    // актуальные задачи
+
+    QVector<QString> actualIds;
+
+    for (int i = 0; i < file.size; ++i) 
+    {
+        actualIds.append(file.tasks[i][0]);
+    }
+    // удваление всех записей, посвященных неактуальным записям
+    for (int i = 0; i < completedTasks.size(); ++i) 
+    {
+        bool actualFlag = 0;
+        for (int j = 0; j < actualIds.size(); ++j) 
+        {
+            if (actualIds[j] == completedTasks[i][0]) 
+            {
+                actualFlag = 1;
+            }
+        }
+        if (actualFlag == 0)
+        {
+            completedTasks.remove(i);
+        }
+    }
+    save();
 }
