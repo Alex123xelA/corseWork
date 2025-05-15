@@ -26,7 +26,7 @@ WorkerWindow::WorkerWindow(QString name)
         if (WorkersTasks.workersTasks[i][0] == name)
             forThisName = WorkersTasks.workersTasks[i];
     }
-    //qDebug() << forThisName;
+    qDebug() << forThisName;
     // Таблица задач
     if (forThisName.size() == 0) 
     {
@@ -175,7 +175,7 @@ void WorkerWindow::reEnterTable()
     for (int i = 0; i < info.size; i++)
     {
         bool flag = 0;
-        for (int j = 1;j < forThisName.size() - 1; ++j)
+        for (int j = 1;j < forThisName.size(); ++j)
         {
             if (forThisName[j] == info.tasks[i][0])
                 flag = 1;
