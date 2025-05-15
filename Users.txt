@@ -1,1 +1,1 @@
-name^^password^^0~~~name2^^password2^^1123
+admin^^admin^^0~~~worker1^^password^^1~~~worker2^^password^^1
