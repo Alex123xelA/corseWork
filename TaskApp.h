@@ -65,6 +65,21 @@ private:
     void save();
 };
 
+class tasks
+{
+public:
+    tasks();
+    QVector<QVector<QString>> completedTasks;
+    TextFile file;
+    void complete(QString id);
+    int count(QString id);
+    QString last(QString id);
+    void clear(QString id);
+private:
+    void deleteTrash();
+    void save();
+};
+
 class viewWindow : public QWidget
 {
     Q_OBJECT
@@ -82,6 +97,7 @@ private:
     QLabel* statusLabel;
     QSlider* slider;
     QTableWidget* table;
+    tasks tasks;
 };
 
 class UsersFile
@@ -134,21 +150,6 @@ private slots:
 private:
     void updateWorkersTable();
     void updateManagersTable();
-};
-
-class tasks
-{
-public:
-    tasks();
-    QVector<QVector<QString>> completedTasks;
-    TextFile file;
-    void complete(QString id);
-    int count(QString id);
-    QString last(QString id);
-    void clear(QString id);
-private:
-    void deleteTrash();
-    void save();
 };
 
 class WorkerWindow : public QWidget

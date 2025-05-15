@@ -31,15 +31,26 @@ viewWindow::viewWindow()
     // 2. Центральная часть: таблица
     table = new QTableWidget(this);
     table->setRowCount(info->size);
-    table->setColumnCount(2);
-    table->setHorizontalHeaderLabels({ "Название задачи", "Текст задачи" });
+    table->setColumnCount(4);
+    table->setHorizontalHeaderLabels({ "Название задачи", "Текст задачи", "Количество выполнений задачи", "Последнее выполнение задачи"});
 
     // Заполняем таблицу 
     for (int i = 0; i < info->size; ++i)
     {
         table->setItem(i, 0, new QTableWidgetItem(info->tasks[i][1]));
         table->setItem(i, 1, new QTableWidgetItem(info->tasks[i][2]));
+        for (int j = 0; j < tasks.completedTasks.size(); ++j) 
+        {
+            if (info->tasks[i][0] == tasks.completedTasks[j][0]) 
+            {
+                table->setItem(i, 2, new QTableWidgetItem(QString::number(tasks.count(info->tasks[i][0]))));
+                table->setItem(i, 3, new QTableWidgetItem(tasks.last(info->tasks[i][0])));
+                break;
+            }
+        }
     }
+    table->resizeColumnsToContents();
+
     // 3. Правая часть: слайдер (инвертированный)
     slider = new QSlider(Qt::Vertical, this);
     slider->setRange(1, info->size);  // обычный диапазон
@@ -62,6 +73,10 @@ viewWindow::viewWindow()
     // Добавляем все в основной вертикальный layout
     mainVerticalLayout->addLayout(mainHorizontalLayout);
     mainVerticalLayout->addWidget(statusLabel);
+
+    // Настройки окна
+    setWindowTitle("Окно редактирования задач");
+    resize(850, 400);
 
     // Подключаем сигнал слайдера к обновлению надписи
     connect(slider, &QSlider::valueChanged, this, &viewWindow::updateStatusLabel);
